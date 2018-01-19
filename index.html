@@ -4,11 +4,20 @@
 <head>
   <title>Dino Dash</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
+  <style>
+    canvas {
+      width: 512px;
+      height: 512px;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -webkit-crisp-edges;
+      image-rendering: pixelated;
+    }
+  </style>
 </head>
 
 <body>
   <h1>Dino Dash</h1>
-  <canvas id="stage" width="500" height="500"></canvas>
+  <canvas id="stage" width="128" height="128"></canvas>
   <script type="text/javascript" src="js/silk.can.js"></script>
   <script type="text/javascript" src="js/game.js"></script>
 </body>
