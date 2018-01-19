@@ -47,19 +47,67 @@ class Dino extends CanvasActor {
     this.image = spriteSheet.image;
 
     this.loop = 4;
+
+    //inputHandler
+    this.input = new InputHandler();
+    this.input.targetEvents(document, {
+      keydown: true,
+      keyup: true
+    });
+
+    this.setBounds({
+      width: 24,
+      height: 24,
+      x: 50,
+      y: 50
+    });
+
+    //jumping code
+    this.vx = 0;
+    this.vy = 0;
+    this.ax = 2.5;
+    this.ay = -2.5;
+    this.grounded = false;
+    this.jump = false;
   }
 
   render() {
-    //(img, sx, sy, sWidth, sHeight, x, y, width, height)
-    this.stage.ctx.drawImage(this.image, this.sprites[this.loop].sx, this.sprites[this.loop].sy, this.sprites[this.loop].sWidth, this.sprites[this.loop].sHeight, 50, 50, this.sprites[this.loop].width, this.sprites[this.loop].height);
-
     if (this.loop >= 9) this.loop = 4;
     else this.loop++;
+  }
+
+  update() {
+    //clear canvas
+    //this.stage.ctx.clearRect(this.x, this.y, this.width, this.height);
+    //(img, sx, sy, sWidth, sHeight, x, y, width, height)
+    this.stage.ctx.drawImage(this.image, this.sprites[this.loop].sx, this.sprites[this.loop].sy, this.sprites[this.loop].sWidth, this.sprites[this.loop].sHeight, this.x, this.y, this.sprites[this.loop].width, this.sprites[this.loop].height);
+
+    if (this.y >= 50) {
+      this.grounded = true;
+    } else this.grounded = false;
+    if (!this.grounded) this.vy += this.ay;
+    if (this.grounded) this.vy = 0;
+    //Jump
+    if (this.grounded)
+      if (this.input.keys[87])
+        this.vy += 10;
+
+    //movement
+    if (this.input.keys[65]) this.x -= this.ax;
+    if (this.input.keys[68]) this.x += this.ax;
+
+    this.setBounds({
+      x: this.x + this.vx,
+      y: this.y - this.vy
+    });
   }
 }
 
 let stage = new CanvasStage(document.querySelector('#stage'));
 stage.background = function(ctx) {
+  let time = (new Date()).getTime();
+  let bg = Math.sin(time);
+  ctx.fillStyle = (bg < 0) ? "red" : "orange";
   ctx.fillRect(0, 0, stage.width, stage.height);
   ctx.fill();
 }
