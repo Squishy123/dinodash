@@ -103,14 +103,32 @@ class Dino extends CanvasActor {
   }
 }
 
-let stage = new CanvasStage(document.querySelector('#stage'));
-stage.background = function(ctx) {
-  let time = (new Date()).getTime();
-  let bg = Math.sin(time);
-  ctx.fillStyle = (bg < 0) ? "red" : "orange";
-  ctx.fillRect(0, 0, stage.width, stage.height);
-  ctx.fill();
+class Box extends CanvasActor {
+  preload() {
+    this.style = function(ctx) {
+      ctx.fillStyle = "blue"
+      ctx.fillRect(this.x, this.y, 50, 50);
+    }
+  }
 }
-stage.start(10, 60);
+
+class ScrollingStage extends CanvasStage {
+  constructor(canvas) {
+    super(canvas);
+    this.background = function(ctx) {
+      let time = (new Date()).getTime();
+      let bg = Math.sin(time);
+      ctx.fillStyle = (bg < 0) ? "red" : "orange";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+}
+
+let stage = new ScrollingStage(document.querySelector('#stage'));
+stage.start(10, 120);
 
 stage.addActor(new Dino());
+stage.addActor(new Box(), {
+  x: 10,
+  y: 10
+});
