@@ -80,6 +80,7 @@ class Dino extends CanvasActor {
     //clear canvas
     //this.stage.ctx.clearRect(this.x, this.y, this.width, this.height);
     //(img, sx, sy, sWidth, sHeight, x, y, width, height)
+    this.stage.ctx.imageSmoothingEnabled = false;
     this.stage.ctx.drawImage(this.image, this.sprites[this.loop].sx, this.sprites[this.loop].sy, this.sprites[this.loop].sWidth, this.sprites[this.loop].sHeight, this.x, this.y, this.sprites[this.loop].width, this.sprites[this.loop].height);
 
     if (this.y >= 50) {
