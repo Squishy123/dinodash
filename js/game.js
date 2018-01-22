@@ -66,14 +66,21 @@ class Dino extends CanvasActor {
     this.vx = 0;
     this.vy = 0;
     this.ax = 2.5;
-    this.ay = -2.5;
+    this.ay = -0.5;
     this.grounded = false;
     this.jump = false;
+
+    //TIMER
+    this.animate = new Timer();
   }
 
   render() {
-    if (this.loop >= 9) this.loop = 4;
-    else this.loop++;
+    if (this.animate.millisecondsElapsed() > 1000 / 10) {
+      if (this.loop >= 9) {
+        this.loop = 4;
+      } else this.loop++;
+      this.animate.mark();
+    }
   }
 
   update() {
@@ -91,7 +98,7 @@ class Dino extends CanvasActor {
     //Jump
     if (this.grounded)
       if (this.input.keys[87])
-        this.vy += 10;
+        this.vy += 5;
 
     //movement
     if (this.input.keys[65]) this.x -= this.ax;
@@ -105,11 +112,28 @@ class Dino extends CanvasActor {
 }
 
 class Box extends CanvasActor {
+  constructor(x, y, width, height) {
+    super();
+    this.setBounds({
+      x: x,
+      y: y,
+      width: width,
+      height: height
+    });
+  }
+
   preload() {
     this.style = function(ctx) {
-      ctx.fillStyle = "blue"
-      ctx.fillRect(this.x, this.y, 50, 50);
+      ctx.fillStyle = "orange"
+      ctx.fillRect(this.x, this.y, this.width, this.height);
     }
+  }
+
+  update() {
+    //this.stage.ctx.clearRect(this.x, this.y, this.width, this.height);
+    this.setBounds({
+      x: this.x + 0.05
+    });
   }
 }
 
@@ -117,19 +141,23 @@ class ScrollingStage extends CanvasStage {
   constructor(canvas) {
     super(canvas);
     this.background = function(ctx) {
-      let time = (new Date()).getTime();
-      let bg = Math.sin(time);
-      ctx.fillStyle = (bg < 0) ? "red" : "orange";
+      //clear
+
+      //let time = (new Date()).getTime();
+      //let bg = Math.sin(time);
+      //ctx.fillStyle = (bg < 0) ? "red" : "orange";
+      ctx.fillStyle = "blue";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
+  }
+
+  update() {
+    super.update();
+    this.addActor(new Box(10, 10, 10, 50));
   }
 }
 
 let stage = new ScrollingStage(document.querySelector('#stage'));
-stage.start(10, 120);
+stage.start(120, 120);
 
 stage.addActor(new Dino());
-stage.addActor(new Box(), {
-  x: 10,
-  y: 10
-});
